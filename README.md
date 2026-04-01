@@ -2,7 +2,7 @@
 
 A Python library for managing, manipulating, and visualizing histograms.
 
-[![Build Status](https://travis-ci.com/escofresco/grams.svg?branch=master)](https://travis-ci.com/escofresco/grams)
+<!--[![Build Status](https://travis-ci.com/escofresco/grams.svg?branch=master)](https://travis-ci.com/escofresco/grams)-->
 
 ## Installation
 
