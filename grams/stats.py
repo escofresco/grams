@@ -24,6 +24,7 @@ from typing import (Hashable, Iterable, MutableMapping, MutableSequence,
                     Sequence)
 
 import numpy as np
+from scipy.spatial import distance
 
 from .online import Avg, Var
 from .root_exceptions import *
