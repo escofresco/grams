@@ -23,9 +23,8 @@ from random import choice, random, randrange
 from typing import (Hashable, Iterable, MutableMapping, MutableSequence,
                     Sequence)
 
-from dit.divergences import jensen_shannon_divergence
-from dit import Distribution
 import numpy as np
+from scipy.spatial import distance
 
 from .online import Avg, Var
 from .root_exceptions import *
@@ -695,28 +694,46 @@ class FreqDist(Distro):
         return FreqDist.jensen_shannon_distance(self_padded_bins,
                                                 other_padded_bins)
 
+    # @staticmethod
+    # def jensen_shannon_distance(first_bins, second_bins):
+    #     """Based on Kullback-Leibler divergence, `Jensen-Shannon divergence`_ is
+    #     used to find the similarity between two probability distributions. This
+    #     method calculates distance, which is the square root of Jensen-Shannon
+    #     divergence.
+
+    #     Args:
+    #         first_bins: This is a collection of <bin, probability> pairs. <bin>
+    #             must be a unique string of homogeneous length. <probability> is
+    #             a float.
+    #         second_bin: This collection of <bin, probability> pairs is compared
+    #             to the first.
+    #     Returns:
+    #         float ∈ [1., 0.]
+
+    #     ..  _Jensen-Shannon divergence:
+    #         https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence
+    #     """
+    #     return jensen_shannon_divergence(
+    #         [Distribution(first_bins),
+    #          Distribution(second_bins)])**.5
+    
     @staticmethod
     def jensen_shannon_distance(first_bins, second_bins):
-        """Based on Kullback-Leibler divergence, `Jensen-Shannon divergence`_ is
+        """Based on Kullback-Leibler divergence, Jensen-Shannon divergence is
         used to find the similarity between two probability distributions. This
         method calculates distance, which is the square root of Jensen-Shannon
         divergence.
-
-        Args:
-            first_bins: This is a collection of <bin, probability> pairs. <bin>
-                must be a unique string of homogeneous length. <probability> is
-                a float.
-            second_bin: This collection of <bin, probability> pairs is compared
-                to the first.
-        Returns:
-            float ∈ [1., 0.]
-
-        ..  _Jensen-Shannon divergence:
-            https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence
         """
-        return jensen_shannon_divergence(
-            [Distribution(first_bins),
-             Distribution(second_bins)])**.5
+        # 1. Get a unique, sorted list of all possible outcomes across both distributions
+        all_keys = sorted(set(first_bins.keys()).union(set(second_bins.keys())))
+        
+        # 2. Build aligned probability arrays (default to 0.0 if an outcome is missing)
+        # We cast the Fractions to floats because SciPy requires standard numbers
+        p = np.array([float(first_bins.get(k, 0.0)) for k in all_keys])
+        q = np.array([float(second_bins.get(k, 0.0)) for k in all_keys])
+        
+        # 3. SciPy calculates the JS *distance* directly (the square root of divergence)
+        return float(distance.jensenshannon(p, q))
 
     @staticmethod
     def cast(obj, target, default=None):

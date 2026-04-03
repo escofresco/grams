@@ -1,4 +1,5 @@
-from collections import Counter, defaultdict, deque, Iterable
+from collections import Counter, defaultdict, deque
+from collections.abc import Iterable
 from contextlib import redirect_stdout
 from functools import reduce, wraps
 from io import StringIO

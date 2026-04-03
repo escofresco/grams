@@ -72,6 +72,24 @@ frequency_standard_deviation = int(hist.std)
 frequency_variance = int(hist.var)
 ```
 
+## Running locally
+### Linux prelim
+```zsh
+% conda install -y -c conda-forge cddlib gmp
+```
+
+### Install dependencies
+```zsh
+% pip install -r requirements.txt
+```
+
+### Run tests
+```zsh
+% pip install pytest pytest-cov
+% pytest --cov
+```
+
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
