@@ -15,5 +15,7 @@ __all__ += stats.__all__
 from .utils import *
 __all__ += utils.__all__
 
+nltk.download('punkt_tab')
+nltk.download('averaged_perceptron_tagger_eng')
 # add the `nltk_data` folder to nltk's list of directories to find data in
 nltk.data.path.append(os.path.join(os.getcwd(), "grams/nltk_data/"))
