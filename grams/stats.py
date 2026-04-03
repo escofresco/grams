@@ -733,7 +733,7 @@ class FreqDist(Distro):
         q = np.array([float(second_bins.get(k, 0.0)) for k in all_keys])
         
         # 3. SciPy calculates the JS *distance* directly (the square root of divergence)
-        return float(distance.jensenshannon(p, q))
+        return float(distance.jensenshannon(p, q, base=2))
 
     @staticmethod
     def cast(obj, target, default=None):
