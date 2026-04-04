@@ -4,7 +4,8 @@
 
 Attributes:
     Markov: A generic Markov model class.
-    MC: The most basic Markov model,
+    MC: The most basic Markov model.
+    HMM: Hidden states in model.
 """
 
 from collections import Counter, defaultdict, deque, namedtuple
