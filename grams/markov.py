@@ -28,9 +28,9 @@ class Markov:
     """Base class for Markov Model implementations which enforces three
     assumptions:
     `The Markov assumption`_: the next state only depends on the
-        current state and not on the past). This means the conditional
-        probability distribution for the system at the next step doesn't depend on
-        the state of the system at previous steps.
+        current state and not on the past. This means the conditional
+        probability distribution for the system at the next step doesn't depend
+        on the state of the system at previous steps.
     `The stationarity assumption`_: When a transition between two states occurs,
         time is independent.
     `The observation independence assumption`_: The current observation is
@@ -147,8 +147,8 @@ class MC(Markov):
         # beginning of each iteration, don't add the last two.
         cache = deque(self.start_state[:-1], maxlen=self.memory)
 
-        for sentence in (Gram.pos_sents(corpus)
-                         if self.use_pos else Gram.sents(corpus)):
+        for sentence in (Histogram.pos_sents(corpus)
+                         if self.use_pos else Histogram.sents(corpus)):
             ## Depending on if pos_tags are being used, look through either
             ## (token, pos) pairs or just the tokens
             for word_pos in chain((self.start_token,), sentence,

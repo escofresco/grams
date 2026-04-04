@@ -26,8 +26,8 @@ class LogMethodCalls(type):
     the average times that methods take to execute.
 
     Follow Principle of Least Astonishment (POLA) by maintaining expected
-    subclass behavior. Add _logs_ and _times_ features in a way that doesn't interfere
-    with anticipated usability.
+    subclass behavior. Add _logs_ and _times_ features in a way that doesn't 
+    interfere with anticipated usability.
 
     adapted from: shorturl.at/ikW56
     """

@@ -1,6 +1,6 @@
 #!python
 
-from grams.grams import Listogram
+from grams.grams import Gram, Listogram
 import unittest
 # Python 2 and 3 compatibility: unittest module renamed this assertion method
 if not hasattr(unittest.TestCase, 'assertCountEqual'):
@@ -13,6 +13,9 @@ class ListogramTest(unittest.TestCase):
     fish_words = ['one', 'fish', 'two', 'fish', 'red', 'fish', 'blue', 'fish']
     fish_list = [('one', 1), ('fish', 4), ('two', 1), ('red', 1), ('blue', 1)]
     fish_dict = {'one': 1, 'fish': 4, 'two': 1, 'red': 1, 'blue': 1}
+
+    def test_listogram_correct_parent(self):
+        self.assertEqual(Listogram.__bases__, (Gram,))
 
     def test_entries(self):
         # NOTE: This test assumes Listogram is implemented as a list of tuples,

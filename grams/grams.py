@@ -6,6 +6,7 @@ from collections import Counter, defaultdict, deque, namedtuple
 from dataclasses import make_dataclass
 from fractions import Fraction
 from functools import wraps
+from itertools import chain
 from os import devnull
 from random import random, choice
 import sys
@@ -25,17 +26,19 @@ __all__ = ["Gram", "Histogram", "Listogram", "Dictogram"]
 
 
 class Gram(FreqDist):  #, metaclass=LogMethodCalls, logs_size=4):
-    """This histogram holds outcomes and frequencies that have been clumped into
-    bins by the parent class, FreqDist.
+    """This histogram holds a representation of outcomes and frequencies that 
+    have been clumped into bins by the parent class, FreqDist. It needs a 
+    pre-generated frequency table to build a representation for. This class
+    serves as the superior purpose-agnostic histogram class in the grams API.
 
     Args:
-        data_frequency: This represents the input to a probability distribution
-        function.
+        tokens_freqs: Binned token counts.
     """
-    __slots__ = ("data_frequency", "sampler")
+    __slots__ = ("tokens_freqs", "sampler")
 
-    def __init__(self, data_frequency):
-        super().__init__(data_frequency)
+    def __init__(self, tokens_freqs):
+        super().__init__(tokens_freqs)
+        self.tokens_freqs = tokens_freqs
         self.sampler = Sample(self)
 
     def similarity(self, other):
@@ -74,6 +77,48 @@ class Gram(FreqDist):  #, metaclass=LogMethodCalls, logs_size=4):
                 hi = mid
         return None
 
+
+class Histogram(Gram):  #, metaclass=LogMethodCalls, logs_size=4):
+    """Orients the `Gram` superclass to natural language from a corpus and/or
+    a pre-built frequency table. 
+
+    Args:
+        corpus: A raw body of text to analyze. If empty, build off of 
+            `tokens_freqs` if possible.
+        tokens_freqs: Natural language already tokens mapped to the number of 
+            occurrences.
+        use_pos_tags: By default, part-of-speech tags are ignored but you can 
+            pass in your own, should you like.
+    """
+
+    __slots__ = ("corpus", "tokens_freqs", "sampler")
+
+    def __init__(self, corpus=None, tokens_freqs=None, use_pos_tags=False):
+        """Takes text or a pregenerated histogram `tokens_freqs` as input."""
+        default_dtype = dict  #if use_pos_tags else
+        if tokens_freqs is None:
+            # dtype = default_dtype
+            if corpus is None:
+                super().__init__(default_dtype())
+            else:
+                super().__init__(
+                    default_dtype(
+                        self._make_token_freq(corpus,
+                                              use_pos_tags=use_pos_tags)))
+        elif corpus is None:
+            # dtype = type(tokens_freqs)
+            super().__init__(tokens_freqs)
+        else:
+            # Consolidate `corpus` tokens into `tokens_freqs`
+            raise NotImplemented("Handle the case where we ")
+        self.sampler = Sample(self)
+
+    def _make_token_freq(self, corpus, use_pos_tags):
+        sentences = Histogram.pos_sents(
+            corpus) if use_pos_tags else Histogram.sents(corpus)
+        all_words = chain.from_iterable(sentences)
+        yield from Counter(all_words).items()
+
     @staticmethod
     def sents(block_text):
         """Convert multiline text into an array of sentences, where each
@@ -101,32 +146,6 @@ class Gram(FreqDist):  #, metaclass=LogMethodCalls, logs_size=4):
         """
         for sentence in sent_tokenize(block_text):
             yield pos_tag(word_tokenize(sentence))
-
-
-class Histogram(Gram, metaclass=LogMethodCalls, logs_size=4):
-
-    __slots__ = ("corpus", "tokens_freqs", "sampler")
-
-    def __init__(self, corpus=None, tokens_freqs=None, use_pos_tags=False):
-        """Takes text or a pregenerated histogram as input."""
-        default_dtype = dict
-        if tokens_freqs is None:
-            dtype = default_dtype
-            if corpus is None:
-                super().__init__(default_dtype())
-            else:
-                super().__init__(
-                    default_dtype(
-                        self._make_token_freq(corpus,
-                                              use_pos_tags=use_pos_tags)))
-        else:
-            dtype = type(tokens_freqs)
-            super().__init__(tokens_freqs)
-        self.sampler = Sample(self)
-
-    def _make_token_freq(self, corpus, use_pos_tags):
-        yield from Gram.pos_sents(corpus) if use_pos_tags else Gram.sents(
-            corpus)
 
 
 class Listogram(Gram, metaclass=LogMethodCalls, logs_size=4):
