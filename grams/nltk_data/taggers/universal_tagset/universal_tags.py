@@ -64,7 +64,8 @@ def _read(fileid):
     with open(MAP_DIR + '/' + fileid + '.map') as f:
         for ln in f:
             ln = ln.strip()
-            if ln == '': continue
+            if ln == '':
+                continue
             fine, coarse = ln.split('\t')
             assert coarse in COARSE_TAGS, 'Unexpected coarse tag: {}'.format(
                 coarse)

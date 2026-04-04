@@ -716,7 +716,7 @@ class FreqDist(Distro):
     #     return jensen_shannon_divergence(
     #         [Distribution(first_bins),
     #          Distribution(second_bins)])**.5
-    
+
     @staticmethod
     def jensen_shannon_distance(first_bins, second_bins):
         """Based on Kullback-Leibler divergence, Jensen-Shannon divergence is
@@ -726,12 +726,12 @@ class FreqDist(Distro):
         """
         # 1. Get a unique, sorted list of all possible outcomes across both distributions
         all_keys = sorted(set(first_bins.keys()).union(set(second_bins.keys())))
-        
+
         # 2. Build aligned probability arrays (default to 0.0 if an outcome is missing)
         # We cast the Fractions to floats because SciPy requires standard numbers
         p = np.array([float(first_bins.get(k, 0.0)) for k in all_keys])
         q = np.array([float(second_bins.get(k, 0.0)) for k in all_keys])
-        
+
         # 3. SciPy calculates the JS *distance* directly (the square root of divergence)
         return float(distance.jensenshannon(p, q, base=2))
 

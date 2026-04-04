@@ -7,12 +7,16 @@ import nltk
 
 __all__ = []
 from .grams import *
+
 __all__ += grams.__all__
 from .online import *
+
 __all__ += online.__all__
 from .stats import FreqDist, Sample
+
 __all__ += stats.__all__
 from .utils import *
+
 __all__ += utils.__all__
 
 nltk.download('punkt_tab')

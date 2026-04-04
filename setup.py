@@ -39,7 +39,8 @@ class sdist_hg(sdist):
         # this is how pre-push script is being kept in version control
 
         with open(".git/hooks/pre-push", "w") as hookscript:
-            hookscript.write("#!/bin/sh\n" "sh .githooks/pre-push")
+            hookscript.write("#!/bin/sh\n"
+                             "sh .githooks/pre-push")
 
         # change permissions to execute by owner so github can use it, write
         # by owner in case the above is called on existing file,

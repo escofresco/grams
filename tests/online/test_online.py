@@ -67,14 +67,18 @@ class OnlineVarianceTestSuite(unittest.TestCase):
         return Expected(np.var(array), np.var(array, ddof=1), np.mean(array),
                         np.std(array), np.std(array, ddof=1))
 
+
 class OnlineAverageTestSuite(unittest.TestCase):
 
     def setUp(self):
         self.online_avg = Avg()
-        self.mono_inc_array = list(range(1, 100001, 7)) # monotonic increasing every 7
-        self.mono_bounds_large_array = [randrange(i) for i in range(1, 100001)] # monotonic bounds-increasing
-        self.normal_large_array = [randrange(10000) for _ in range(100000)] # normal distribution
-    
+        self.mono_inc_array = list(range(1, 100001,
+                                         7))  # monotonic increasing every 7
+        self.mono_bounds_large_array = [randrange(i) for i in range(1, 100001)
+                                       ]  # monotonic bounds-increasing
+        self.normal_large_array = [randrange(10000) for _ in range(100000)
+                                  ]  # normal distribution
+
     def test_norm_exclusively_adds(self):
         expected = avg(self.normal_large_array)
         for val in self.normal_large_array:
