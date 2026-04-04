@@ -75,6 +75,10 @@ class Avg(float):
     def add(self, val):
         self.avg = (self.total * self.avg + val) / (self.total + 1)
         self.total += 1
+        # self.n += 1
+        # # Update using the stable incremental formula
+        # self.avg += (x - self.avg) / self.n
+        return self.avg
 
     def remove(self, val):
         if not self.total:

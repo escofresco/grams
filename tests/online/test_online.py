@@ -12,11 +12,7 @@ def avg(array):
     return sum(array) / len(array)
 
 
-class OnlineTestSuite(unittest.TestCase):
-
-    def setUp(self):
-        self.online_avg = Avg()
-        self.normal_large_array = [randrange(i) for i in range(1, 100001)]
+class OnlineVarianceTestSuite(unittest.TestCase):
 
     def test_online_variance_uniform_decimal(self):
         variance = Var()
@@ -52,12 +48,6 @@ class OnlineTestSuite(unittest.TestCase):
                 print(i)
                 self.make_online_variance_asserts(expected_stats, variance)
 
-    def test_norm_exclusively_adds(self):
-        expected = avg(self.normal_large_array)
-        for val in self.normal_large_array:
-            self.online_avg.add(val)
-        self.assertEqual(expected, round(float(self.online_avg), 5))
-
     def test_norm_exclusively_removes(self):
         pass
 
@@ -76,3 +66,17 @@ class OnlineTestSuite(unittest.TestCase):
                               "popvar samplevar mean popstd samplestd ")
         return Expected(np.var(array), np.var(array, ddof=1), np.mean(array),
                         np.std(array), np.std(array, ddof=1))
+
+class OnlineAverageTestSuite(unittest.TestCase):
+
+    def setUp(self):
+        self.online_avg = Avg()
+        self.mono_inc_array = list(range(1, 100001, 7)) # monotonic increasing every 7
+        self.mono_bounds_large_array = [randrange(i) for i in range(1, 100001)] # monotonic bounds-increasing
+        self.normal_large_array = [randrange(10000) for _ in range(100000)] # normal distribution
+    
+    def test_norm_exclusively_adds(self):
+        expected = avg(self.normal_large_array)
+        for val in self.normal_large_array:
+            self.online_avg.add(val)
+        self.assertEqual(expected, round(float(self.online_avg), 5))
