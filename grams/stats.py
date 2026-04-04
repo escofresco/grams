@@ -696,22 +696,22 @@ class FreqDist(Distro):
 
     # @staticmethod
     # def jensen_shannon_distance(first_bins, second_bins):
-        # """Based on Kullback-Leibler divergence, `Jensen-Shannon divergence`_ is
-        # used to find the similarity between two probability distributions. This
-        # method calculates distance, which is the square root of Jensen-Shannon
-        # divergence.
+    # """Based on Kullback-Leibler divergence, `Jensen-Shannon divergence`_ is
+    # used to find the similarity between two probability distributions. This
+    # method calculates distance, which is the square root of Jensen-Shannon
+    # divergence.
 
-        # Args:
-        #     first_bins: This is a collection of <bin, probability> pairs. <bin>
-        #         must be a unique string of homogeneous length. <probability> is
-        #         a float.
-        #     second_bin: This collection of <bin, probability> pairs is compared
-        #         to the first.
-        # Returns:
-        #     float ∈ [1., 0.]
+    # Args:
+    #     first_bins: This is a collection of <bin, probability> pairs. <bin>
+    #         must be a unique string of homogeneous length. <probability> is
+    #         a float.
+    #     second_bin: This collection of <bin, probability> pairs is compared
+    #         to the first.
+    # Returns:
+    #     float ∈ [1., 0.]
 
-        # ..  _Jensen-Shannon divergence:
-        #     https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence
+    # ..  _Jensen-Shannon divergence:
+    #     https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence
     #     """
     #     return jensen_shannon_divergence(
     #         [Distribution(first_bins),
