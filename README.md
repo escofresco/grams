@@ -85,10 +85,8 @@ frequency_variance = int(hist.var)
 
 ### Run tests
 ```zsh
-% pip install pytest pytest-cov
-% pytest --cov
+% python -m unittest
 ```
-
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

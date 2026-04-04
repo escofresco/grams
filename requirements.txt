@@ -116,8 +116,6 @@ pyOpenSSL
 pyparsing
 pypoman
 PySocks 
-pytest
-pytest-cov
 python-dateutil
 python-json-logger
 PyYAML
@@ -129,7 +127,7 @@ rfc3339-validator
 rfc3986-validator
 rfc3987-syntax
 rpds-py
-ruamel.yaml 
+ruamel.yaml
 scipy
 Send2Trash
 setuptools
