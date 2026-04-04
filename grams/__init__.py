@@ -2,8 +2,18 @@
 #!/usr/bin/env python3
 """A package for using histograms to interact with data."""
 import os
+import subprocess
+from contextlib import contextmanager
 
 import nltk
+
+# Blocks all the annoying prints from nltk data downloads
+subprocess.run([
+    "python", "-m", "nltk.downloader", "punkt_tab",
+    "averaged_perceptron_tagger_eng"
+],
+               stdout=subprocess.DEVNULL,
+               stderr=subprocess.DEVNULL)
 
 __all__ = []
 from .grams import *
@@ -19,7 +29,5 @@ from .utils import *
 
 __all__ += utils.__all__
 
-nltk.download('punkt_tab')
-nltk.download('averaged_perceptron_tagger_eng')
 # add the `nltk_data` folder to nltk's list of directories to find data in
 nltk.data.path.append(os.path.join(os.getcwd(), "grams/nltk_data/"))
