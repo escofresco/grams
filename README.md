@@ -93,5 +93,22 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
+Here are some features we’d like:
+
+### Custom functionality
+- [weighted recording engine](https://blogs.sas.com/content/iml/2017/10/04/create-interpret-weighted-histogram.html)
+- fuzzy binning (high)
+- multiresolution (gaussian filters, pyramid decomposition)
+- weighted histogram analysis method 
+- v-optimal (low)
+
+### Optimizations
+##### OS-sensitive
+- simd vectorized fill (low)
+##### High-frequency recording
+- zero-allocation paths (med) 
+##### Big data
+- probabilistic quantile sketches (high) with t-digest or req-sketch.
+
 ## License
 [MIT](LICENSE)
