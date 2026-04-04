@@ -86,6 +86,34 @@ class MCTestSuite(unittest.TestCase):
             self.assertIn(outcome, expected_sentences)
 
         self.assertLess(expected_samples.similarity(actual_samples), 0.05)
+        
+    def test_pickle_chain_serialization(self):
+        """
+        Tests that __getstate__ and __setstate__ correctly identify 
+        the 'chain' attribute and transform it for pickling.
+        """
+        # 1. Initialize an MC model with a tiny corpus
+        corpus = "The quick brown fox jumps."
+        model = MC(corpus, order=1, use_pos=False)
+        
+        # 2. Trigger __getstate__ (where your `== "chain"` logic is)
+        # This will convert the Histogram objects in `chain` to raw dicts
+        pickled_data = pickle.dumps(model)
+        
+        # 3. Trigger __setstate__ (where the other `== "chain"` logic is)
+        # This will reconstruct the Histogram objects from the loaded dicts
+        loaded_model = pickle.loads(pickled_data)
+        
+        # 4. Verify the chain attribute survived the round trip
+        # If the `if attr == "chain":` block failed, `loaded_model.chain` 
+        # wouldn't exist or would be the wrong data type.
+        self.assertTrue(hasattr(loaded_model, "chain"))
+        
+        # Verify the keys inside the chain were reconstructed properly
+        self.assertEqual(
+            set(model.chain.keys()), 
+            set(loaded_model.chain.keys())
+        )
 
     # def test_save(self):
     #     def sattrs(obj):
