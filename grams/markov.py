@@ -66,7 +66,7 @@ class MC(Markov):
     Attributes:
         order (int): Number of prior linguistic units to keep in memory. Making
             this number too high results in overfitting, producing results
-            that are verbatim taking from the training data. But, making it too
+            that are taken from the training data verbatim. But, making it too
             low loses information about context, such as rare events with high
             certainty; "modus" is a rare word, but it is almost certainly
             followed by "operandi".
@@ -129,7 +129,7 @@ class MC(Markov):
         state = state
         for attr, val in state.items():
             if attr is "chain":
-                self.chain = self._make_chain(val)
+                self.chain = dict(self._make_chain(val))
             else:
                 setattr(self, attr, val)
 
