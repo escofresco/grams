@@ -36,8 +36,7 @@ __all__ = ["Distro", "FreqDist", "Sample"]
 
 class Distro:
     """A datastructure for managing two-dimensional data, such as x,y values or
-    discrete inputs and outputs.`Google Python
-    Style Guide`_
+    discrete inputs and outputs.
 
     Args:
         bins: Can be a subclass of dict, list, or tuple. Must be either hashable
@@ -290,8 +289,8 @@ class Distro:
 
 
 class FreqDist(Distro):
-    """A language-specific datastructure for managing the frequency distribution of types (words
-    or other linguistic units). A frequency distribution represents the number
+    """A language-agnostic datastructure for managing the frequency distribution
+    of information units). A frequency distribution represents the number
     of times each event in an experiment occurs. Data is broken into groups,
     which are referred to here as bins. Optimizations are heavily
     influenced by `Zipf's law`_, which input data is assumed to follow, unless
@@ -313,7 +312,7 @@ class FreqDist(Distro):
     to 1/N.
 
     Args:
-        tokens_freqs: Can be any iterable object with tokens (any linguistic
+        tokens_freqs: Can be any iterable object with tokens (any information
             unit) mapped to their frequency. Must be homogeneous. This class
             does its best to maintain the original datatype that was passed in.
                 Examples:
@@ -328,7 +327,7 @@ class FreqDist(Distro):
     Attributes:
         min_freq (int): Lowest frequency in dataset.
         max_freq (int): Highest frequency in dataset.
-        token_count (int): Total number of tokens (linguistic units) in dataset.
+        token_count (int): Total number of tokens (information units) in dataset.
         type_count (int): Total number of distinct tokens (types) in dataset.
         max_token_str_len (int): Longest element when cast to string.
         max_token_len (int): Length of longest element if element has __len__
@@ -565,8 +564,8 @@ class FreqDist(Distro):
         )  # track average as we pass through tokens_freqs
         self.online_freq_var = Var(
         )  # track variance as we pass through tokens_freqs
-        self.token_count = 0  # number of linguistic units
-        self.type_count = 0  # number of distinct linguistic units
+        self.token_count = 0  # number of information units
+        self.type_count = 0  # number of distinct information units
 
     def _update_instance_vars(self, token, freq):
         """Convenience method for updating initialized instance variables.
@@ -574,7 +573,8 @@ class FreqDist(Distro):
         do some validation around existing instance variables.
 
         Args:
-            token (Any): A linguistic unit for discretizing speech.
+            token (Any): An information unit such as a linguistic unit for 
+                discretizing speech.
             freq (int): The number of observed token occurences.
         """
 
@@ -606,7 +606,7 @@ class FreqDist(Distro):
         time.
 
         Args:
-            bin: Data which is expected to have a frequency.
+            bin: Data which is expected to have an been observed.
 
         Returns:
             Frequency of bin data.
@@ -693,29 +693,6 @@ class FreqDist(Distro):
 
         return FreqDist.jensen_shannon_distance(self_padded_bins,
                                                 other_padded_bins)
-
-    # @staticmethod
-    # def jensen_shannon_distance(first_bins, second_bins):
-    # """Based on Kullback-Leibler divergence, `Jensen-Shannon divergence`_ is
-    # used to find the similarity between two probability distributions. This
-    # method calculates distance, which is the square root of Jensen-Shannon
-    # divergence.
-
-    # Args:
-    #     first_bins: This is a collection of <bin, probability> pairs. <bin>
-    #         must be a unique string of homogeneous length. <probability> is
-    #         a float.
-    #     second_bin: This collection of <bin, probability> pairs is compared
-    #         to the first.
-    # Returns:
-    #     float ∈ [1., 0.]
-
-    # ..  _Jensen-Shannon divergence:
-    #     https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence
-    #     """
-    #     return jensen_shannon_divergence(
-    #         [Distribution(first_bins),
-    #          Distribution(second_bins)])**.5
 
     @staticmethod
     def jensen_shannon_distance(first_bins, second_bins):
