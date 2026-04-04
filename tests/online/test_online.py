@@ -8,10 +8,6 @@ import numpy as np
 from grams.online import Avg, Var
 
 
-def avg(array):
-    return sum(array) / len(array)
-
-
 class OnlineVarianceTestSuite(unittest.TestCase):
 
     def test_online_variance_uniform_decimal(self):
@@ -79,8 +75,99 @@ class OnlineAverageTestSuite(unittest.TestCase):
         self.normal_large_array = [randrange(10000) for _ in range(100000)
                                   ]  # normal distribution
 
-    def test_norm_exclusively_adds(self):
-        expected = avg(self.normal_large_array)
-        for val in self.normal_large_array:
+    def test_mono_inc_exclusively_adds(self):
+        running_sum = 0
+
+        for i, val in enumerate(self.mono_inc_array):
             self.online_avg.add(val)
-        self.assertEqual(expected, round(float(self.online_avg), 5))
+            running_sum += val
+            expected_avg = running_sum / (i + 1)
+            with self.subTest(i=i):
+                self.assertAlmostEqual(expected_avg,
+                                       float(self.online_avg),
+                                       places=5)
+        expected_final = sum(self.mono_inc_array) / len(self.mono_inc_array)
+        self.assertAlmostEqual(expected_final, float(self.online_avg), places=5)
+
+    def test_mono_exclusively_adds(self):
+        running_sum = 0
+
+        for i, val in enumerate(self.mono_bounds_large_array):
+            self.online_avg.add(val)
+            running_sum += val
+            expected_avg = running_sum / (i + 1)
+            with self.subTest(i=i):
+                self.assertAlmostEqual(expected_avg,
+                                       float(self.online_avg),
+                                       places=5)
+        expected_final = sum(self.mono_bounds_large_array) / len(
+            self.mono_bounds_large_array)
+        self.assertAlmostEqual(expected_final, float(self.online_avg), places=5)
+
+    def test_norm_exclusively_adds(self):
+        running_sum = 0
+
+        for i, val in enumerate(self.normal_large_array):
+            self.online_avg.add(val)
+            running_sum += val
+            expected_avg = running_sum / (i + 1)
+            with self.subTest(i=i):
+                self.assertAlmostEqual(expected_avg,
+                                       float(self.online_avg),
+                                       places=5)
+        expected_final = sum(self.normal_large_array) / len(
+            self.normal_large_array)
+        self.assertAlmostEqual(expected_final, float(self.online_avg), places=5)
+
+    def test_empty_average(self):
+        """Ensure the class handles being evaluated before any data is added."""
+        empty_avg = Avg()
+        # If your design dictates it should return 0.0:
+        self.assertEqual(0.0, float(empty_avg))
+
+        # OR, if your design dictates it SHOULD raise an error:
+        # with self.assertRaises(ZeroDivisionError):
+        #     float(empty_avg)
+
+    def test_mixed_signs_and_zeroes(self):
+        """Test combinations of positive, negative, and zero values."""
+        array = [100, -50, 0, 0, -1000, 500, -50]
+        running_sum = 0
+
+        for i, val in enumerate(array):
+            self.online_avg.add(val)
+            running_sum += val
+            expected_avg = running_sum / (i + 1)
+            with self.subTest(i=i, val=val):
+                self.assertAlmostEqual(expected_avg,
+                                       float(self.online_avg),
+                                       places=5)
+
+    def test_extreme_floating_point_precision(self):
+        """
+        Catastrophic cancellation test. 
+        A naive sum() will lose the 1.0s due to floating point limits.
+        """
+        # 1 quadrillion, negative 1 quadrillion, then three 1s.
+        # The true average is exactly 0.6
+        array = [1e15, -1e15, 1.0, 1.0, 1.0]
+        running_sum = 0
+
+        for i, val in enumerate(array):
+            self.online_avg.add(val)
+            running_sum += val
+            expected_avg = running_sum / (i + 1)
+            with self.subTest(i=i):
+                self.assertAlmostEqual(expected_avg,
+                                       float(self.online_avg),
+                                       places=5)
+
+    def test_fraction_inputs(self):
+        """Ensure the average handles the Fraction data type cleanly."""
+        array = [Fraction(1, 3), Fraction(1, 2), Fraction(2, 3)]
+        # Expected average of (1/3 + 1/2 + 2/3) is 1/2
+
+        for val in array:
+            self.online_avg.add(val)
+
+        self.assertAlmostEqual(0.5, float(self.online_avg), places=5)
