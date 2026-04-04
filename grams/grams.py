@@ -10,7 +10,7 @@ from itertools import chain
 from os import devnull
 from random import random, choice
 import sys
-from typing import Iterable, Optional, Tuple, Union
+from typing import Sequence
 
 from coverage import Coverage, CoverageData
 from nltk import pos_tag, sent_tokenize, word_tokenize
@@ -19,8 +19,8 @@ from .online import Var
 from .root_exceptions import *
 from .stats import FreqDist, Sample
 from .termgraph import showgraph
-from .utils import (binsearch, invert_dict, LogMethodCalls,
-                    merge_data_containing_ints, p)
+from .utils import (LogMethodCalls, merge_nonsequentials_containing_ints,
+                    merge_data_containing_ints)
 
 __all__ = ["Gram", "Histogram", "Listogram", "Dictogram"]
 
@@ -63,7 +63,7 @@ class Gram(FreqDist):  #, metaclass=LogMethodCalls, logs_size=4):
     @staticmethod
     def bin_search(array, prob):
         """Search for the lowest matching probability in array consisting of
-        namedtuples. this is the sample component of roulette wheel sampling"""
+        namedtuples. This is the sample component of roulette wheel sampling"""
         lo = 0
         hi = len(array) - 1
         while lo <= hi:
@@ -84,8 +84,8 @@ class Histogram(Gram):  #, metaclass=LogMethodCalls, logs_size=4):
 
     Args:
         corpus: A raw body of text to analyze. If empty, build off of 
-            `tokens_freqs` if possible.
-        tokens_freqs: Natural language already tokens mapped to the number of 
+            `tokens_freqs` if applicable.
+        tokens_freqs: Natural language tokens already mapped to the number of 
             occurrences.
         use_pos_tags: By default, part-of-speech tags are ignored but you can 
             pass in your own, should you like.
@@ -94,8 +94,17 @@ class Histogram(Gram):  #, metaclass=LogMethodCalls, logs_size=4):
     __slots__ = ("corpus", "tokens_freqs", "sampler")
 
     def __init__(self, corpus=None, tokens_freqs=None, use_pos_tags=False):
-        """Takes text or a pregenerated histogram `tokens_freqs` as input."""
-        default_dtype = dict  #if use_pos_tags else
+        """Takes text or a pregenerated histogram `tokens_freqs` as input.
+        We want to handle `corpus` iterables differently to preserve their 
+        lazy memory characteristics.
+        """
+        if isinstance(corpus, Sequence):
+            if not isinstance(corpus, str):
+                corpus = " ".join(corpus)
+        else:
+            raise SequenceError("corpus must be a sequence")
+
+        default_dtype = dict
         if tokens_freqs is None:
             # dtype = default_dtype
             if corpus is None:
@@ -106,11 +115,15 @@ class Histogram(Gram):  #, metaclass=LogMethodCalls, logs_size=4):
                         self._make_token_freq(corpus,
                                               use_pos_tags=use_pos_tags)))
         elif corpus is None:
-            # dtype = type(tokens_freqs)
             super().__init__(tokens_freqs)
         else:
             # Consolidate `corpus` tokens into `tokens_freqs`
-            raise NotImplemented("Handle the case where we ")
+            super().__init__(
+                merge_nonsequentials_containing_ints(
+                    default_dtype(
+                        self._make_token_freq(corpus,
+                                              use_pos_tags=use_pos_tags)),
+                    tokens_freqs))
         self.sampler = Sample(self)
 
     def _make_token_freq(self, corpus, use_pos_tags):

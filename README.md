@@ -103,12 +103,14 @@ Here are some features we’d like:
 - v-optimal (low)
 
 ### Optimizations
+- parametric binning (sturges’, scott’s, freedman-diaconis, doane’s)
 ##### OS-sensitive
 - simd vectorized fill (low)
 ##### High-frequency recording
-- zero-allocation paths (med) 
+- hdr with zero-allocation paths (med) 
 ##### Big data
-- probabilistic quantile sketches (high) with t-digest or req-sketch.
+- synopses with probabilistic quantile sketches (high) with t-digest or req-sketch.
+- coordinated omission
 
 ## License
 [MIT](LICENSE)

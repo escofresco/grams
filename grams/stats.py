@@ -35,7 +35,7 @@ __all__ = ["Distro", "FreqDist", "Sample"]
 
 
 class Distro:
-    """A datastructure for managing two-dimensional data, such as x,y values or
+    """A data structure for managing two-dimensional data, such as x,y values or
     discrete inputs and outputs.
 
     Args:

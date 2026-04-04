@@ -27,8 +27,16 @@ class HistogramTestSuite(unittest.TestCase):
         hist = Histogram(tokens_freqs=freqs)
         self.assertDictEqual(hist.tokens_freqs, {"world": 1})
 
-    @unittest.skip("Implement corpus table consolidation")
     def test_histogram_combined_freqs(self):
         freqs = {"world": 1}
         hist = Histogram("hello", tokens_freqs=freqs)
         self.assertDictEqual(hist.tokens_freqs, {"hello": 1, "world": 1})
+
+    def test_histogram_list_type_corpus(self):
+        corpus = ["Hello", "world", "."]
+        hist = Histogram(corpus)
+        self.assertDictEqual(hist.tokens_freqs, {
+            "Hello": 1,
+            "world": 1,
+            ".": 1
+        })
